@@ -1,15 +1,12 @@
-const express=require("express")
-const router=express.Router()
+const path = require('path');
 
-const path=require("path")
-const viewPath = require("../util/path")
+const express = require('express');
 
-const adminData=require("./admin")
+const productsController=require("../controllers/products")
 
-router.get('/',(req,res,next)=>{
-    //dirname =give the current directory or location
-    console.log(adminData.products)
-    res.sendFile(viewPath("shop.html"))
-})
+const router = express.Router();
 
-module.exports=router
+// Path + method
+router.get('/', productsController.getProducts);
+
+module.exports = router;

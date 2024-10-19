@@ -1,25 +1,24 @@
-const http=require("http")
-const express=require("express")
-const bodyParser=require("body-parser")
-const app=express()
+const http = require('http');
+const path = require('path');
 
-const path=require("path")
-const viewPath=require("./util/path")
+const express = require('express');
+const bodyParser = require('body-parser');
+const app = express();
 
-const adminData=require("./routes/admin")
-const shopRoutes=require("./routes/shop")
+app.set('view engine', 'ejs');
+app.set('views', 'views');
 
-app.use(bodyParser.urlencoded({extended:false}))
+const errControllers=require("./controllers/err")
 
-app.use(express.static(path.join(__dirname,"public")))
+const adminRoutes = require('./routes/admin');
+const shopRoutes = require('./routes/shop');
 
-app.use(shopRoutes)
-app.use('/admin',adminData.routes)
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.static(path.join(__dirname, 'public')));
 
-//add 404 page
-app.use((req,res,next)=>{
-    res.statusCode=404
-    res.sendFile(viewPath("page-not-found.html"))
-})
+app.use('/admin', adminRoutes);
+app.use(shopRoutes);
 
-app.listen(4000)//no need to write createserver or server.listen this code is already written in expressjs
+app.use(errControllers.get404);
+
+app.listen(4000);
